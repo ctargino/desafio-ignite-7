@@ -11,6 +11,22 @@ describe("Create User", () => {
     createUserUseCase = new CreateUserUseCase(inMemoryUsersRepository);
   });
 
+  it("Should not be able to create a existent user", async () => {
+    await inMemoryUsersRepository.create({
+      email: "teste@t.com",
+      name: "test",
+      password: "test",
+    });
+
+    expect(async () => {
+      await createUserUseCase.execute({
+        email: "teste@t.com",
+        name: "test",
+        password: "test",
+      });
+    }).rejects.toEqual(new CreateUserError());
+  });
+
   it("Should create a user", async () => {
     const user = await createUserUseCase.execute({
       email: "teste@t.com",
@@ -19,21 +35,5 @@ describe("Create User", () => {
     });
 
     expect(user).toHaveProperty("id");
-  });
-
-  it("Should not be able to create a existent user", async () => {
-    expect(async () => {
-      await createUserUseCase.execute({
-        email: "teste@t.com",
-        name: "test",
-        password: "test",
-      });
-
-      await createUserUseCase.execute({
-        email: "teste@t.com",
-        name: "test",
-        password: "test",
-      });
-    }).rejects.toEqual(new CreateUserError());
   });
 });

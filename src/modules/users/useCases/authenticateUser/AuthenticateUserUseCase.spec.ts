@@ -16,6 +16,24 @@ describe("Authenticate User", () => {
     );
   });
 
+  it("Should throw an error if password not match", async () => {
+    const password = "test";
+    const email = "email 2";
+
+    await createUserUseCase.execute({
+      email,
+      name: "test",
+      password,
+    });
+
+    expect(async () => {
+      await authenticateUserUseCase.execute({
+        email,
+        password: "incorrect_password",
+      });
+    }).rejects.toEqual(new IncorrectEmailOrPasswordError());
+  });
+
   it("Should autheticate user", async () => {
     const password = "test";
     const email = "email";
@@ -48,24 +66,6 @@ describe("Authenticate User", () => {
       await authenticateUserUseCase.execute({
         email: "email_not_exist",
         password,
-      });
-    }).rejects.toEqual(new IncorrectEmailOrPasswordError());
-  });
-
-  it("Should throw an error if password not match", async () => {
-    const password = "test";
-    const email = "email";
-
-    await createUserUseCase.execute({
-      email,
-      name: "test",
-      password,
-    });
-
-    expect(async () => {
-      await authenticateUserUseCase.execute({
-        email,
-        password: "incorrect_password",
       });
     }).rejects.toEqual(new IncorrectEmailOrPasswordError());
   });

@@ -12,4 +12,8 @@ export default {
   preset: "ts-jest",
   testMatch: ["**/*.spec.ts"],
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  collectCoverage: true,
+  collectCoverageFrom: ["<rootDir>/src/modules/**/useCases/**/*.ts"],
+  coverageDirectory: "coverage",
+  coverageReporters: ["text-summary", "lcov"],
 };
